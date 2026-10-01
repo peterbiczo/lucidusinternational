@@ -2700,7 +2700,7 @@ h1 {
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (max-height: 880px) {
   .story-dialog {
     grid-template-rows: auto auto auto;
   }

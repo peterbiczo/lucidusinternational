@@ -157,6 +157,35 @@ a {
   transform: translate(-22px, 22px);
 }
 
+.easter-egg-toast {
+  animation: easter-egg-flash 500ms ease both;
+  background: var(--acid);
+  border: 1px solid var(--ink);
+  box-shadow: 8px 8px 0 rgba(16, 21, 15, 0.22);
+  color: var(--ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.68rem;
+  font-weight: 650;
+  left: 50%;
+  letter-spacing: 0.06em;
+  max-width: calc(100vw - 32px);
+  padding: 14px 18px;
+  pointer-events: none;
+  position: fixed;
+  text-align: center;
+  text-transform: uppercase;
+  top: 94px;
+  transform: translateX(-50%);
+  width: max-content;
+  z-index: 210;
+}
+
+@keyframes easter-egg-flash {
+  0% { opacity: 0; transform: translate(-50%, -8px) scale(0.96); }
+  14%, 72% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -4px) scale(0.99); }
+}
+
 .brand-type {
   display: flex;
   flex-direction: column;

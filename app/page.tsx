@@ -2,6 +2,9 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 
+// Edit the text between these quotes to customise the ten-tap Easter egg.
+const EASTER_EGG_MESSAGE = "You found the hidden Lucidus message.";
+
 const services = [
   {
     number: "01",
@@ -232,7 +235,18 @@ export default function Home() {
   const [storyOpen, setStoryOpen] = useState(false);
   const [storyStep, setStoryStep] = useState(0);
   const [storyPlaying, setStoryPlaying] = useState(true);
+  const [easterEggVisible, setEasterEggVisible] = useState(false);
+  const logoTapCountRef = useRef(0);
+  const easterEggTimerRef = useRef<number | null>(null);
   const storyDialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    return () => {
+      if (easterEggTimerRef.current !== null) {
+        window.clearTimeout(easterEggTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -323,6 +337,24 @@ export default function Home() {
     setStoryStep(index);
   }
 
+  function handleLogoTap() {
+    logoTapCountRef.current += 1;
+
+    if (logoTapCountRef.current < 10) return;
+
+    logoTapCountRef.current = 0;
+    setEasterEggVisible(true);
+
+    if (easterEggTimerRef.current !== null) {
+      window.clearTimeout(easterEggTimerRef.current);
+    }
+
+    easterEggTimerRef.current = window.setTimeout(() => {
+      setEasterEggVisible(false);
+      easterEggTimerRef.current = null;
+    }, 500);
+  }
+
   function handleContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -344,7 +376,12 @@ export default function Home() {
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Lucidus International L.L.C-FZ home">
+        <a
+          className="brand"
+          href="#top"
+          aria-label="Lucidus International L.L.C-FZ home"
+          onClick={handleLogoTap}
+        >
           <span className="brand-symbol" aria-hidden="true">
             <span className="brand-orbit" />
             <span className="brand-letter">L</span>
@@ -364,6 +401,12 @@ export default function Home() {
           Start a conversation <span aria-hidden="true">↗</span>
         </a>
       </header>
+
+      {easterEggVisible && (
+        <div className="easter-egg-toast" role="status" aria-live="polite">
+          {EASTER_EGG_MESSAGE}
+        </div>
+      )}
 
       <section className="hero" id="top">
         <div className="hero-grid" aria-hidden="true" />

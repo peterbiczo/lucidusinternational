@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 const services = [
   {
@@ -51,8 +51,188 @@ const steps = [
   },
 ];
 
+const systemStory = [
+  {
+    number: "01",
+    discipline: "Why every area matters",
+    title: "The same decision creates four different realities.",
+    text: "Take a market entry. Strategy tests where to compete. Finance tests the return, cash, and controls. Tax tests the structure and obligations. Technology tests whether processes and data can support it. Ignore one, and the decision is incomplete.",
+    points: ["Demand & positioning", "Cash & control", "Structure & obligations", "Process & data"],
+  },
+  {
+    number: "02",
+    discipline: "The local-optimum trap",
+    title: "Optimising one part can make the whole business worse.",
+    text: "A choice that looks efficient through one lens can simply move cost, work, or risk somewhere else. The local win remains visible; the company-wide consequence often does not.",
+    points: ["Local win ≠ total value", "Costs move between functions", "Risk surfaces later"],
+  },
+  {
+    number: "03",
+    discipline: "What you can lose",
+    title: "The hidden bill arrives after the apparent win.",
+    text: "What looked cheaper or faster at approval becomes manual workarounds, duplicated effort, remediation, delayed decisions, and another implementation. By then, change costs more and momentum has been lost.",
+    points: ["Rework", "Delay", "Compliance exposure", "Lost capacity"],
+  },
+  {
+    number: "04",
+    discipline: "What optimisation changes",
+    title: "Resolve the trade-offs before committing.",
+    text: "One Clear View tests value, economics, obligations, and delivery capability against the same decision. Dependencies are designed together and constraints surface while the plan is still inexpensive to change.",
+    points: ["Fewer surprises", "Lower cost of change", "Faster stable execution", "Stronger governance"],
+  },
+  {
+    number: "05",
+    discipline: "The business benefit",
+    title: "The gain is not more advice. It is a better outcome.",
+    text: "Leadership can choose options that are profitable, compliant, operable, and scalable at the same time—and reject options that only look attractive from one angle.",
+    points: ["Protect margin", "Reduce avoidable risk", "Move faster", "Scale with control"],
+  },
+];
+
+function StoryVisual({ step }: { step: number }) {
+  if (step === 0) {
+    return (
+      <div className="story-visual story-visual-decision" aria-hidden="true">
+        <div className="decision-core">
+          <small>Decision</small>
+          <strong>Enter a<br />new market</strong>
+        </div>
+        {[
+          ["Strategy", "Is there demand—and where do we compete?"],
+          ["Finance", "What is the return, cash need, and control model?"],
+          ["Tax", "Where do obligations arise—and how should we structure?"],
+          ["Technology", "Can our process, systems, and data support it?"],
+        ].map(([area, question], index) => (
+          <div className={`decision-area decision-area-${index + 1}`} key={area}>
+            <span>0{index + 1}</span>
+            <strong>{area}</strong>
+            <small>{question}</small>
+          </div>
+        ))}
+        <p className="story-visual-note"><span />Change one answer and the others move.</p>
+      </div>
+    );
+  }
+
+  if (step === 1) {
+    return (
+      <div className="story-visual story-visual-tradeoffs" aria-hidden="true">
+        <div className="tradeoff-heading">
+          <span>Optimise only this</span>
+          <span>What moves elsewhere</span>
+        </div>
+        {[
+          ["Lowest headline tax", "More entities, filings, controls, and operating complexity"],
+          ["Fastest possible launch", "Weak controls, manual workarounds, and future remediation"],
+          ["Software before process", "Broken work is automated—and becomes harder to change"],
+          ["Finance-only cost cutting", "Delivery capacity disappears when growth needs it"],
+        ].map(([localWin, systemCost], index) => (
+          <div className="tradeoff-row" key={localWin}>
+            <span>0{index + 1}</span>
+            <strong>{localWin}</strong>
+            <i>→</i>
+            <small>{systemCost}</small>
+          </div>
+        ))}
+        <div className="tradeoff-conclusion"><span />The cost did not disappear. It moved.</div>
+      </div>
+    );
+  }
+
+  if (step === 2) {
+    return (
+      <div className="story-visual story-visual-cost" aria-hidden="true">
+        <div className="cost-heading">
+          <span>Illustrative consequence path</span>
+          <strong>The initial choice looks faster and cheaper</strong>
+        </div>
+        <div className="cost-line">
+          {[
+            ["At approval", "Visible saving", "One area is improved in isolation"],
+            ["During delivery", "Workarounds", "People reconcile gaps manually"],
+            ["In operation", "Risk & delay", "Errors, control gaps, and slow decisions emerge"],
+            ["After scale", "Rebuild", "Process, structure, or systems must be redesigned"],
+          ].map(([when, cost, detail], index) => (
+            <div className="cost-stage" key={when}>
+              <span>0{index + 1}</span>
+              <small>{when}</small>
+              <strong>{cost}</strong>
+              <p>{detail}</p>
+            </div>
+          ))}
+        </div>
+        <div className="cost-total">
+          <span>What accumulates</span>
+          <strong>Delay + rework + exposure + lost capacity</strong>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 3) {
+    return (
+      <div className="story-visual story-visual-gate" aria-hidden="true">
+        <div className="gate-input">
+          <span>Proposed decision</span>
+          <strong>Enter the market</strong>
+          <small>Original assumption set</small>
+        </div>
+        <div className="gate-tests">
+          {[
+            ["Value", "Profitable after total cost?"],
+            ["Economics", "Cash, reporting, and controls ready?"],
+            ["Obligations", "Structure and compliance workable?"],
+            ["Capability", "People, process, and data can deliver?"],
+          ].map(([test, question], index) => (
+            <div className="gate-test" key={test}>
+              <span>0{index + 1}</span><strong>{test}</strong><small>{question}</small><i>✓</i>
+            </div>
+          ))}
+        </div>
+        <div className="gate-output">
+          <span>Integrated answer</span>
+          <strong>Ready to execute</strong>
+          <small>Phased launch · controls by design · one data model · clear ownership</small>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="story-visual story-visual-value" aria-hidden="true">
+      <div className="value-columns">
+        <div className="value-column value-gain">
+          <div className="value-heading"><span>Optimise the whole</span><strong>What you gain</strong></div>
+          <ul>
+            <li><span>01</span><strong>Durable margin</strong><small>Total cost, not one visible line</small></li>
+            <li><span>02</span><strong>Faster execution</strong><small>Fewer late-stage surprises and handoffs</small></li>
+            <li><span>03</span><strong>Confident compliance</strong><small>Obligations designed into the model</small></li>
+            <li><span>04</span><strong>Scalable operations</strong><small>Process, controls, and systems reinforce each other</small></li>
+          </ul>
+        </div>
+        <div className="value-column value-loss">
+          <div className="value-heading"><span>Optimise one part</span><strong>What remains at risk</strong></div>
+          <ul>
+            <li><span>01</span><strong>Margin leakage</strong><small>Hidden operating and remediation cost</small></li>
+            <li><span>02</span><strong>Slow decisions</strong><small>Conflicting data and manual reconciliation</small></li>
+            <li><span>03</span><strong>Regulatory exposure</strong><small>Structure and activity fall out of step</small></li>
+            <li><span>04</span><strong>Stranded investment</strong><small>Technology that cannot support the real model</small></li>
+          </ul>
+        </div>
+      </div>
+      <div className="value-definition">
+        <strong>One Clear View</strong><span>One decision · every consequence · one coordinated plan</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [formStatus, setFormStatus] = useState("");
+  const [storyOpen, setStoryOpen] = useState(false);
+  const [storyStep, setStoryStep] = useState(0);
+  const [storyPlaying, setStoryPlaying] = useState(true);
+  const storyDialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -71,6 +251,77 @@ export default function Home() {
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!storyOpen || !storyPlaying) return;
+
+    const timer = window.setInterval(() => {
+      setStoryStep((current) => (current + 1) % systemStory.length);
+    }, 7200);
+
+    return () => window.clearInterval(timer);
+  }, [storyOpen, storyPlaying]);
+
+  useEffect(() => {
+    if (!storyOpen) return;
+
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(() => storyDialogRef.current?.focus());
+
+    function handleStoryKey(event: KeyboardEvent) {
+      if (event.key === "Tab") {
+        const focusable = storyDialogRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+
+        if (focusable?.length) {
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+      }
+      if (event.key === "Escape") {
+        setStoryOpen(false);
+      }
+      if (event.key === "ArrowRight") {
+        setStoryPlaying(false);
+        setStoryStep((current) => (current + 1) % systemStory.length);
+      }
+      if (event.key === "ArrowLeft") {
+        setStoryPlaying(false);
+        setStoryStep((current) =>
+          (current - 1 + systemStory.length) % systemStory.length,
+        );
+      }
+    }
+
+    document.addEventListener("keydown", handleStoryKey);
+    return () => {
+      document.removeEventListener("keydown", handleStoryKey);
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus();
+    };
+  }, [storyOpen]);
+
+  function openStory() {
+    setStoryStep(0);
+    setStoryPlaying(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setStoryOpen(true);
+  }
+
+  function chooseStoryStep(index: number) {
+    setStoryPlaying(false);
+    setStoryStep(index);
+  }
 
   function handleContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -236,7 +487,7 @@ export default function Home() {
               happen next.
             </p>
           </div>
-          <div className="perspective-graphic" aria-hidden="true">
+          <div className="perspective-graphic">
             <div className="system-meta system-meta-top">
               <span>Integrated advisory system</span>
               <span>04 inputs / 01 view</span>
@@ -270,11 +521,17 @@ export default function Home() {
                 <small>Capability</small>
               </div>
 
-              <div className="system-core">
+              <button
+                aria-haspopup="dialog"
+                aria-label="Open the One Clear View story"
+                className="system-core"
+                onClick={openStory}
+                type="button"
+              >
                 <span>One</span>
                 <strong>Clear<br />view</strong>
-                <i />
-              </div>
+                <small>Explore ↗</small>
+              </button>
             </div>
             <div className="system-meta system-meta-bottom">
               <span>Connected disciplines</span>
@@ -283,6 +540,108 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {storyOpen && (
+        <div
+          className="story-overlay"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setStoryOpen(false);
+          }}
+        >
+          <div
+            aria-labelledby="story-title"
+            aria-modal="true"
+            className={`story-dialog${storyPlaying ? "" : " is-paused"}`}
+            ref={storyDialogRef}
+            role="dialog"
+            tabIndex={-1}
+          >
+            <header className="story-header">
+              <div className="story-brand">
+                <span className="brand-symbol" aria-hidden="true">
+                  <span className="brand-orbit" />
+                  <span className="brand-letter">L</span>
+                  <span className="brand-spark" />
+                </span>
+                <span>
+                  <strong>One Clear View</strong>
+                  <small>How the system works</small>
+                </span>
+              </div>
+              <button
+                aria-label="Close the One Clear View story"
+                className="story-close"
+                onClick={() => setStoryOpen(false)}
+                type="button"
+              >
+                Close <span aria-hidden="true">×</span>
+              </button>
+            </header>
+
+            <div className="story-stage">
+              <article
+                aria-live="polite"
+                className="story-copy"
+                key={`copy-${storyStep}`}
+              >
+                <div className="story-step-label">
+                  <span>{systemStory[storyStep].number} / 05</span>
+                  <span>{systemStory[storyStep].discipline}</span>
+                </div>
+                <h2 id="story-title">{systemStory[storyStep].title}</h2>
+                <p>{systemStory[storyStep].text}</p>
+                <ul>
+                  {systemStory[storyStep].points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </article>
+
+              <StoryVisual key={`visual-${storyStep}`} step={storyStep} />
+            </div>
+
+            <footer className="story-footer">
+              <div className="story-progress" aria-label="Story progress">
+                {systemStory.map((slide, index) => (
+                  <button
+                    aria-label={`Show ${slide.discipline}`}
+                    className={`${index < storyStep ? "is-complete " : ""}${
+                      index === storyStep ? "is-current" : ""
+                    }`}
+                    key={slide.discipline}
+                    onClick={() => chooseStoryStep(index)}
+                    type="button"
+                  >
+                    <span>{slide.number}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="story-controls">
+                <button
+                  aria-label="Previous slide"
+                  onClick={() => chooseStoryStep((storyStep - 1 + systemStory.length) % systemStory.length)}
+                  type="button"
+                >
+                  ←
+                </button>
+                <button
+                  onClick={() => setStoryPlaying((playing) => !playing)}
+                  type="button"
+                >
+                  {storyPlaying ? "Pause" : "Play"}
+                </button>
+                <button
+                  aria-label="Next slide"
+                  onClick={() => chooseStoryStep((storyStep + 1) % systemStory.length)}
+                  type="button"
+                >
+                  →
+                </button>
+              </div>
+            </footer>
+          </div>
+        </div>
+      )}
 
       <section className="contact section-pad" id="contact">
         <div className="contact-intro" data-reveal>

@@ -601,20 +601,28 @@ export default function Home() {
             </div>
 
             <footer className="story-footer">
-              <div className="story-progress" aria-label="Story progress">
-                {systemStory.map((slide, index) => (
-                  <button
-                    aria-label={`Show ${slide.discipline}`}
-                    className={`${index < storyStep ? "is-complete " : ""}${
-                      index === storyStep ? "is-current" : ""
-                    }`}
-                    key={slide.discipline}
-                    onClick={() => chooseStoryStep(index)}
-                    type="button"
-                  >
-                    <span>{slide.number}</span>
-                  </button>
-                ))}
+              <div className="story-progress-shell">
+                <div className="story-progress-meta" aria-live="polite">
+                  <span>Chapter {systemStory[storyStep].number} of 05</span>
+                  <strong>{systemStory[storyStep].discipline}</strong>
+                </div>
+                <div className="story-progress" aria-label="Story chapters">
+                  {systemStory.map((slide, index) => (
+                    <button
+                      aria-current={index === storyStep ? "step" : undefined}
+                      aria-label={`Show chapter ${slide.number}: ${slide.discipline}`}
+                      className={`${index < storyStep ? "is-complete " : ""}${
+                        index === storyStep ? "is-current" : ""
+                      }`}
+                      key={slide.discipline}
+                      onClick={() => chooseStoryStep(index)}
+                      type="button"
+                    >
+                      <span>{slide.number}</span>
+                      <small>{slide.discipline}</small>
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="story-controls">
                 <button

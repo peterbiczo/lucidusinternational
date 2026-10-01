@@ -2478,61 +2478,126 @@ h1 {
 
 .story-footer {
   align-items: center;
-  background: transparent;
+  background: var(--ink);
   border-top: 1px solid rgba(255, 255, 255, 0.16);
   color: var(--paper-bright);
   display: grid;
-  gap: 34px;
+  gap: clamp(20px, 3vw, 42px);
   grid-template-columns: 1fr auto;
   min-height: 0;
-  padding: 20px 0 0;
+  padding: 18px 0 0;
+  position: relative;
+  z-index: 6;
+}
+
+.story-progress-shell {
+  align-items: center;
+  display: grid;
+  gap: clamp(18px, 2.5vw, 34px);
+  grid-template-columns: minmax(150px, 0.34fr) minmax(320px, 1fr);
+  min-width: 0;
+}
+
+.story-progress-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.story-progress-meta span {
+  color: var(--acid);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.story-progress-meta strong {
+  font-size: 0.72rem;
+  font-weight: 520;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .story-progress {
   display: grid;
-  gap: 7px;
+  gap: 6px;
   grid-template-columns: repeat(5, 1fr);
 }
 
 .story-progress button {
-  background: rgba(255, 255, 255, 0.16);
-  border: 0;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  height: 2px;
-  padding: 0;
+  display: grid;
+  gap: 4px;
+  grid-template-columns: auto 1fr;
+  min-height: 46px;
+  overflow: hidden;
+  padding: 8px 9px;
   position: relative;
+  text-align: left;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
-.story-progress button::after {
-  background: var(--acid);
+.story-progress button::before {
+  background: rgba(223, 255, 82, 0.42);
+  bottom: 0;
   content: "";
-  height: 100%;
+  height: 2px;
   left: 0;
   position: absolute;
-  top: 0;
-  width: 0;
-}
-
-.story-progress button.is-complete::after {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
   width: 100%;
 }
 
-.story-progress button.is-current::after {
-  animation: story-progress-fill 7.2s linear forwards;
+.story-progress button:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(223, 255, 82, 0.45);
+  color: var(--paper-bright);
 }
 
-.story-dialog.is-paused .story-progress button.is-current::after {
-  animation-play-state: paused;
+.story-progress button.is-complete {
+  border-color: rgba(223, 255, 82, 0.28);
+  color: rgba(223, 255, 82, 0.72);
+}
+
+.story-progress button.is-complete::before {
+  transform: scaleX(1);
 }
 
 .story-progress button span {
-  color: rgba(255, 255, 255, 0.42);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 0.48rem;
-  left: 0;
-  letter-spacing: 0.08em;
-  position: absolute;
-  top: 8px;
+  font-size: 0.5rem;
+  letter-spacing: 0.04em;
+}
+
+.story-progress button small {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.38rem;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.story-progress button.is-current {
+  background: var(--acid);
+  border-color: var(--acid);
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.story-progress button.is-current::before {
+  background: var(--ink);
+  transform: scaleX(1);
 }
 
 .story-controls {
@@ -2612,13 +2677,9 @@ h1 {
   to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-@keyframes story-progress-fill {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
 @media (max-width: 900px) {
   .story-dialog {
+    grid-template-rows: auto auto auto;
     height: 100dvh;
     padding: 20px;
   }
@@ -2627,6 +2688,7 @@ h1 {
     align-items: stretch;
     gap: 34px;
     grid-template-columns: 1fr;
+    min-height: auto;
     padding: 30px 0 40px;
   }
 
@@ -2650,8 +2712,35 @@ h1 {
   }
 
   .story-footer {
-    position: sticky;
-    bottom: 0;
+    align-items: stretch;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    padding: 18px 0 4px;
+  }
+
+  .story-progress-shell {
+    gap: 14px;
+    grid-template-columns: 1fr;
+  }
+
+  .story-progress-meta {
+    align-items: baseline;
+    flex-direction: row;
+    gap: 12px;
+    justify-content: space-between;
+  }
+
+  .story-progress-meta span {
+    margin: 0;
+  }
+
+  .story-controls {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+  }
+
+  .story-controls button {
+    min-height: 44px;
   }
 }
 
@@ -2713,13 +2802,33 @@ h1 {
   }
 
   .story-footer {
-    gap: 24px;
-    grid-template-columns: 1fr;
-    padding-bottom: 5px;
+    gap: 13px;
   }
 
-  .story-controls {
-    justify-content: flex-end;
+  .story-progress-meta strong {
+    font-size: 0.64rem;
+    max-width: 62%;
+    text-align: right;
+  }
+
+  .story-progress {
+    gap: 5px;
+  }
+
+  .story-progress button {
+    display: flex;
+    justify-content: center;
+    min-height: 38px;
+    padding: 7px 4px;
+    text-align: center;
+  }
+
+  .story-progress button small {
+    display: none;
+  }
+
+  .story-progress button.is-current {
+    transform: translateY(-1px);
   }
 
   .fragment-card {

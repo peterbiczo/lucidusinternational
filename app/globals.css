@@ -2525,7 +2525,8 @@ h1 {
 .story-progress {
   display: grid;
   gap: 6px;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  min-width: 0;
 }
 
 .story-progress button {
@@ -2538,6 +2539,7 @@ h1 {
   gap: 4px;
   grid-template-columns: auto 1fr;
   min-height: 46px;
+  min-width: 0;
   overflow: hidden;
   padding: 8px 9px;
   position: relative;
@@ -2682,6 +2684,42 @@ h1 {
   .story-visual {
     align-self: start;
     margin-top: 30px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+  .story-progress button {
+    display: flex;
+    justify-content: center;
+    padding-inline: 6px;
+    text-align: center;
+  }
+
+  .story-progress button small {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 820px) {
+  .story-dialog {
+    grid-template-rows: auto auto auto;
+  }
+
+  .story-stage {
+    min-height: auto;
+  }
+
+  .story-copy {
+    min-height: 510px;
+  }
+
+  .story-step-label {
+    margin-bottom: 28px;
+  }
+
+  .story-copy h2 {
+    font-size: clamp(2.5rem, 4vw, 3.35rem);
+    margin-bottom: 26px;
   }
 }
 

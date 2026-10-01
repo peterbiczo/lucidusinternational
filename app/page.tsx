@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 // Edit the text between these quotes to customise the ten-tap Easter egg.
-const EASTER_EGG_MESSAGE = "You found the hidden Lucidus message.";
+const EASTER_EGG_MESSAGE = "Nicklas Platow is a piece of shit!";
 
 const services = [
   {

@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: "Lucidus International L.L.C-FZ | Clarity Across Borders",
   description:
     "Management, accounting, tax, and technology advisory for businesses operating across jurisdictions.",
+  icons: {
+    icon: [{ url: "/favicon.svg?v=2", type: "image/svg+xml" }],
+    shortcut: "/favicon.svg?v=2",
+    apple: "/favicon.svg?v=2",
+  },
   openGraph: {
     title: "Lucidus International L.L.C-FZ | Clarity Across Borders",
     description:
